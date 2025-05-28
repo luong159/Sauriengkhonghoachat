@@ -3,135 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Đặt Mua Sầu Riêng</title>
+  <title>Đặt sầu riêng</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { height: 100%; font-family: Arial, sans-serif; }
-
-    .hero {
-      background-image: url('cover.jpg');
-      background-size: cover;
-      background-position: center;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+    body {
+      font-family: Arial, sans-serif;
       padding: 20px;
     }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      text-align: center;
-      color: #fff;
-    }
-
     .form-box {
-      background-color: rgba(255, 255, 255, 0.95);
+      max-width: 400px;
+      margin: auto;
       padding: 20px;
+      background: #f0f0f0;
       border-radius: 12px;
-      width: 90%;
-      max-width: 360px;
-      color: black;
     }
-
-    .form-box label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-
-    .form-box input,
-    .form-box select,
-    .form-box textarea,
-    .form-box button {
+    input, select, textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
+      padding: 10px;
+      margin-top: 10px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 14px;
     }
-
-    .form-box button {
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
       background-color: green;
       color: white;
       border: none;
-      margin-top: 15px;
+      border-radius: 6px;
       cursor: pointer;
-    }
-
-    .success-message {
-      font-size: 18px;
       font-weight: bold;
-      color: green;
-      background-color: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
     }
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
 </head>
 <body>
-  <div class="hero" id="main">
-    <h1>Đặt Mua Sầu Riêng Tươi Ngon</h1>
-    <div class="form-box" id="form-container">
-      <form id="orderForm">
-        <label>Số lượng (kg):</label>
-        <input type="number" name="quantity" required>
+  <div class="form-box">
+    <h2>Đặt sầu riêng</h2>
+    <form id="orderForm">
+      <label for="kg">Số lượng (kg):</label>
+      <input type="number" id="kg" required />
 
-        <label>Loại sầu riêng:</label>
-        <select name="type" required>
-          <option value="">Chọn loại</option>
-          <option value="Ri6">Ri6</option>
-          <option value="Monthong">Monthong</option>
-        </select>
+      <label for="type">Loại sầu riêng:</label>
+      <select id="type">
+        <option value="Ri6">Ri6</option>
+        <option value="Thái">Thái</option>
+        <option value="Khác">Khác</option>
+      </select>
 
-        <label>Ngày muốn nhận:</label>
-        <input type="date" name="date" required>
+      <label for="phone">Số điện thoại:</label>
+      <input type="text" id="phone" required />
 
-        <label>Địa chỉ nhận hàng:</label>
-        <input type="text" name="address" required>
+      <label for="note">Ghi chú:</label>
+      <textarea id="note"></textarea>
 
-        <label>Số điện thoại:</label>
-        <input type="tel" name="phone" required>
-
-        <label>Ghi chú:</label>
-        <textarea name="note" rows="2"></textarea>
-
-        <button type="submit">Gửi đơn hàng</button>
-      </form>
-    </div>
+      <button type="submit">Gửi đơn hàng</button>
+    </form>
   </div>
 
   <script>
-    (function() {
-      emailjs.init("public_BvdJbW41k290678G3");
-    })();
-
-    document.getElementById("orderForm").addEventListener("submit", function(e) {
+    document.getElementById("orderForm").addEventListener("submit", function (e) {
       e.preventDefault();
+      const kg = document.getElementById("kg").value;
+      const type = document.getElementById("type").value;
+      const phone = document.getElementById("phone").value;
+      const note = document.getElementById("note").value;
 
-      const formData = {
-        quantity: this.quantity.value,
-        type: this.type.value,
-        date: this.date.value,
-        address: this.address.value,
-        phone: this.phone.value,
-        note: this.note.value
-      };
+      const message = `Đơn hàng sầu riêng:\n- Số lượng: ${kg}kg\n- Loại: ${type}\n- SĐT: ${phone}\n- Ghi chú: ${note}`;
+      const encoded = encodeURIComponent(message);
+      const zaloLink = `https://zalo.me/0867819621?text=${encoded}`;
 
-      emailjs.send("service_r0ffdvy", "template_soeu8kq", formData)
-        .then(function(response) {
-          document.getElementById("form-container").innerHTML =
-            '<div class="success-message">Đơn hàng đã được gửi thành công!</div>';
-        }, function(error) {
-          alert("Lỗi gửi đơn hàng. Vui lòng thử lại.");
-          console.error("EmailJS Error:", error);
-        });
+      window.open(zaloLink, "_blank");
     });
   </script>
 </body>
